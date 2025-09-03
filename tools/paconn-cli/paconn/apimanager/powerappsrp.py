@@ -129,3 +129,48 @@ class PowerAppsRP:
             payload=payload)
 
         return json.loads(response.text)
+
+    def modify_permissions(self, environment, connector_id, permissions_data):
+        """
+        Modifies permissions for a custom connector.
+        """
+        api = urljoin('apis/', connector_id + '/modifyPermissions')
+
+        endpoint = self.api_manager.construct_url(
+            path=api,
+            query=PowerAppsRP._get_filter_query(environment))
+
+        # Build the payload in the expected format
+        payload = {
+            "put": [
+                {
+                    "properties": permissions_data
+                }
+            ]
+        }
+
+        response = self.api_manager.request(
+            verb='POST',
+            endpoint=endpoint,
+            payload=payload,
+            headers=self.rp_headers)
+
+        return response.text
+
+    def delete_connector(self, environment, connector_id):
+        """
+        Deletes a custom connector.
+        """
+        api = urljoin('apis/', connector_id)
+
+        endpoint = self.api_manager.construct_url(
+            path=api,
+            query=PowerAppsRP._get_filter_query(environment))
+
+        response = self.api_manager.request(
+            verb='DELETE',
+            endpoint=endpoint,
+            headers=self.rp_headers)
+
+        return response.text
+
