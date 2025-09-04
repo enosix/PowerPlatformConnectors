@@ -53,3 +53,20 @@ class Profile:
             client_id=self.client_id)
 
         return credentials.token
+
+    def authenticate_service_principal(self, client_secret):
+        """
+        Authenticate using service principal credentials.
+        """
+        context = self._get_authentication_context()
+
+        mgmt_token = context.acquire_token_with_client_credentials(
+            resource=self.resource,
+            client_id=self.client_id,
+            client_secret=client_secret)
+
+        credentials = AADTokenCredentials(
+            token=mgmt_token,
+            client_id=self.client_id)
+
+        return credentials.token

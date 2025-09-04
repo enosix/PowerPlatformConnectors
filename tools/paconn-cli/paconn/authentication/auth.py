@@ -14,7 +14,7 @@ from paconn.authentication.profile import Profile
 from paconn.authentication.tokenmanager import TokenManager
 
 
-def get_authentication(settings, force_authenticate):
+def get_authentication(settings, force_authenticate, client_secret=None):
     """
     Logs the user in and saves the token in a file.
     """
@@ -31,7 +31,11 @@ def get_authentication(settings, force_authenticate):
             resource=settings.resource,
             authority_url=settings.authority_url)
 
-        credentials = profile.authenticate_device_code()
+        # Use service principal authentication if client_secret is provided
+        if client_secret:
+            credentials = profile.authenticate_service_principal(client_secret)
+        else:
+            credentials = profile.authenticate_device_code()
 
         tokenmanager.write(credentials)
 

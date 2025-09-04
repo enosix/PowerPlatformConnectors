@@ -91,6 +91,12 @@ def load_arguments(self, command):
             required=False,
             help='Resource URL for login.')
         arg_context.argument(
+            'client_secret',
+            options_list=['--secret', '-k'],
+            type=str,
+            required=False,
+            help='Client secret for service principal authentication.')
+        arg_context.argument(
             SETTINGS,
             options_list=SETTINGS_OPTIONS,
             type=str,
