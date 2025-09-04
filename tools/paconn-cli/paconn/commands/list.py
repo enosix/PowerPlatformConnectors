@@ -7,8 +7,6 @@
 List command.
 """
 
-import json
-
 from paconn import _LIST
 
 from paconn.common.util import display
@@ -24,8 +22,7 @@ def list(
         environment,
         powerapps_url,
         powerapps_version,
-        settings_file,
-        raw_json=False):
+        settings_file):
     """
     List command.
     """
@@ -57,33 +54,28 @@ def list(
         ]
 
         if custom_connectors:
-            if raw_json:
-                display(json.dumps(custom_connectors, indent=2))
-            else:
-                display('Found {} custom connector(s) in environment {}:'.format(
-                    len(custom_connectors),
-                    settings.environment))
-
-                for connector in custom_connectors:
-                    display('  - {}'.format(
-                        connector.get('name', 'Unknown')))
-
-                    # Show additional details if available
-                    properties = connector.get('properties', {})
-                    display_name = properties.get('displayName', '')
-                    description = properties.get('description', '')
-                    created_by = properties.get('createdBy', {})
-                    creator_name = created_by.get('displayName', '') if created_by else ''
-
-                    if display_name:
-                        display('    Display Name: {}'.format(display_name))
-                    if description:
-                        display('    Description: {}'.format(description[:100] + ('...' if len(description) > 100 else '')))
-                    if creator_name:
-                        display('    Created By: {}'.format(creator_name))
-
-                    display('')  # Empty line for readability
+            # Return structured data with PascalCase keys for knack to format
+            result_data = []
+            for connector in custom_connectors:
+                properties = connector.get('properties', {})
+                created_by = properties.get('createdBy', {})
+                
+                connector_data = {
+                    'Name': connector.get('name', ''),
+                    'Id': connector.get('id', ''),
+                    'Type': connector.get('type', ''),
+                    'DisplayName': properties.get('displayName', ''),
+                    'IconUri': properties.get('iconUri', ''),
+                    'IconBrandColor': properties.get('iconBrandColor', ''),
+                    'Description': properties.get('description', ''),
+                    'CreatedBy': created_by.get('displayName', '') if created_by else ''
+                }
+                result_data.append(connector_data)
+            
+            return result_data
         else:
             display('No custom connectors found in environment {}.'.format(settings.environment))
+            return []
     else:
         display('No custom connectors found in environment {}.'.format(settings.environment))
+        return []

@@ -361,11 +361,6 @@ def load_arguments(self, command):
             type=str,
             required=False,
             help=SETTINGS_HELP)
-        arg_context.argument(
-            'raw_json',
-            options_list=['--raw', '-j'],
-            action='store_true',
-            help='Output raw JSON for custom connectors instead of friendly format.')
 
     with ArgumentsContext(self, _SHARE) as arg_context:
         arg_context.argument(
