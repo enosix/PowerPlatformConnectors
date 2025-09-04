@@ -58,12 +58,6 @@ def share(
         if field not in permissions_data:
             raise ValueError(f"Missing required field in permissions file: {field}")
 
-    principal = permissions_data['principal']
-    required_principal_fields = ['email', 'id', 'type']
-    for field in required_principal_fields:
-        if field not in principal:
-            raise ValueError(f"Missing required field in principal: {field}")
-
     # Call the API to modify permissions
     response_text = powerapps_rp.modify_permissions(
         environment=settings.environment,
