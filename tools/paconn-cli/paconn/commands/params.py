@@ -9,7 +9,7 @@ CLI parameter definitions
 """
 
 from knack.arguments import ArgumentsContext
-from paconn import _LOGIN, _DOWNLOAD, _CREATE, _UPDATE, _VALIDATE, _CONVERT
+from paconn import _LOGIN, _DOWNLOAD, _CREATE, _UPDATE, _VALIDATE, _CONVERT, _LIST, _SHARE, _DELETE
 
 CLIENT_SECRET = 'client_secret'
 CLIENT_SECRET_OPTIONS = ['--secret', '-r']
@@ -59,6 +59,10 @@ DESTINATION = 'destination'
 DESTINATION_OPTIONS = ['--dest', '-dst']
 DESTINATION_HELP = 'Destination directory for the converted connector files.'
 
+PERMISSIONS_FILE = 'permissions_file'
+PERMISSIONS_FILE_OPTIONS = ['--permissions', '-perm']
+PERMISSIONS_FILE_HELP = 'Location of the permissions JSON file containing roleName and principal information.'
+
 
 # pylint: disable=unused-argument
 def load_arguments(self, command):
@@ -90,6 +94,12 @@ def load_arguments(self, command):
             type=str,
             required=False,
             help='Resource URL for login.')
+        arg_context.argument(
+            'client_secret',
+            options_list=['--secret', '-k'],
+            type=str,
+            required=False,
+            help='Client secret for service principal authentication.')
         arg_context.argument(
             SETTINGS,
             options_list=SETTINGS_OPTIONS,
@@ -325,3 +335,110 @@ def load_arguments(self, command):
             type=str,
             required=False,
             help=SETTINGS_HELP)
+
+    with ArgumentsContext(self, _LIST) as arg_context:
+        arg_context.argument(
+            ENVIRONMENT,
+            options_list=ENVIRONMENT_OPTIONS,
+            type=str,
+            required=False,
+            help=ENVIRONMENT_HELP)
+        arg_context.argument(
+            POWERAPPS_URL,
+            options_list=POWERAPPS_URL_OPTIONS,
+            type=str,
+            required=False,
+            help=POWERAPPS_URL_HELP)
+        arg_context.argument(
+            POWERAPPS_VERSION,
+            options_list=POWERAPPS_VERSION_OPTIONS,
+            type=str,
+            required=False,
+            help=POWERAPPS_VERSION_HELP)
+        arg_context.argument(
+            SETTINGS,
+            options_list=SETTINGS_OPTIONS,
+            type=str,
+            required=False,
+            help=SETTINGS_HELP)
+
+    with ArgumentsContext(self, _SHARE) as arg_context:
+        arg_context.argument(
+            ENVIRONMENT,
+            options_list=ENVIRONMENT_OPTIONS,
+            type=str,
+            required=False,
+            help=ENVIRONMENT_HELP)
+        arg_context.argument(
+            CONNECTOR_ID,
+            options_list=CONNECTOR_ID_OPTIONS,
+            type=str,
+            required=False,
+            help=CONNECTOR_ID_HELP)
+        arg_context.argument(
+            PERMISSIONS_FILE,
+            options_list=PERMISSIONS_FILE_OPTIONS,
+            type=str,
+            required=True,
+            help=PERMISSIONS_FILE_HELP)
+        arg_context.argument(
+            POWERAPPS_URL,
+            options_list=POWERAPPS_URL_OPTIONS,
+            type=str,
+            required=False,
+            help=POWERAPPS_URL_HELP)
+        arg_context.argument(
+            POWERAPPS_VERSION,
+            options_list=POWERAPPS_VERSION_OPTIONS,
+            type=str,
+            required=False,
+            help=POWERAPPS_VERSION_HELP)
+        arg_context.argument(
+            SETTINGS,
+            options_list=SETTINGS_OPTIONS,
+            type=str,
+            required=False,
+            help=SETTINGS_HELP)
+
+
+    with ArgumentsContext(self, _DELETE) as arg_context:
+        arg_context.argument(
+            ENVIRONMENT,
+            options_list=ENVIRONMENT_OPTIONS,
+            type=str,
+            required=False,
+            help=ENVIRONMENT_HELP)
+        arg_context.argument(
+            CONNECTOR_ID,
+            options_list=CONNECTOR_ID_OPTIONS,
+            type=str,
+            required=False,
+            help=CONNECTOR_ID_HELP)
+        arg_context.argument(
+            'force',
+            options_list=['--force', '-f'],
+            type=bool,
+            required=False,
+            nargs='?',
+            default=False,
+            const=True,
+            help='Force deletion without confirmation prompt.')
+        arg_context.argument(
+            POWERAPPS_URL,
+            options_list=POWERAPPS_URL_OPTIONS,
+            type=str,
+            required=False,
+            help=POWERAPPS_URL_HELP)
+        arg_context.argument(
+            POWERAPPS_VERSION,
+            options_list=POWERAPPS_VERSION_OPTIONS,
+            type=str,
+            required=False,
+            help=POWERAPPS_VERSION_HELP)
+        arg_context.argument(
+            SETTINGS,
+            options_list=SETTINGS_OPTIONS,
+            type=str,
+            required=False,
+            help=SETTINGS_HELP)
+
